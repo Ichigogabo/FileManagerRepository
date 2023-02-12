@@ -15,7 +15,7 @@ namespace FileManagerClassLibrary.Services.BlobStorageService
 
         private readonly string _connectionString;
         private readonly string _blobContainerName;
-
+         
         public BlobStorageService(IConfiguration configuration)
         {
             this._connectionString = configuration.GetValue<string>("ConnectionString");

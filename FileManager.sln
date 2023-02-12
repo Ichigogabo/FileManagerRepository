@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileManager", "FileManager\FileManager.csproj", "{63AD9499-2B51-426B-A571-A11464E03F52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManagerClassLibrary", "FileManagerClassLibrary\FileManagerClassLibrary.csproj", "{CBBD026E-CEE6-4A17-ABD1-C982FF370C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileManagerClassLibrary", "FileManagerClassLibrary\FileManagerClassLibrary.csproj", "{CBBD026E-CEE6-4A17-ABD1-C982FF370C6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
