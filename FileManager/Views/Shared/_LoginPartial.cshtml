@@ -13,11 +13,14 @@ var options = AzureADB2COptions.Value;
 {
         @if (!string.IsNullOrEmpty(options.EditProfilePolicyId))
         {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="EditProfile">
-                    <span class="text-dark">Hello @User.Identity.Name!</span>
-                </a>
-            </li>
+    <li class="nav-item">
+        @*<a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="EditProfile">
+            <span class="text-dark">Hello @User.Identity.Name!</span>
+        </a>*@
+        <a class="nav-link text-dark">
+            <span class="text-dark">Hello @User.Identity.Name!</span>
+        </a>
+    </li>
         }
         else
         {
