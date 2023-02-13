@@ -14,6 +14,7 @@ namespace FileManagerClassLibrary.Interfaces
         public Task<IEnumerable<FileMetadata>> GetAllFileMetadaAsync();
         public Task<FileMetadata> GetByIdAsync(string Id);
         public Task AddAsync(FileMetadata Item);
+        public Task DeleteAsync(string id);
 
     }
 }

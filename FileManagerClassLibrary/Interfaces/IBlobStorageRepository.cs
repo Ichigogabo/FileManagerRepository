@@ -10,10 +10,8 @@ namespace FileManagerClassLibrary.Interfaces
 {
     public interface IBlobStorageRepository
     {
-        //Task<string> UploadAsync(IFormFile file, string blobname = null);
-
         Task<CreateFileResponseViewModel> UploadAsync(IFormFile file);
-
         Task<ReadFileViewModel> DownloadAsync(string blobFilename);
+        Task<bool> DeleteAsync(string blobFilename);
     }
 }

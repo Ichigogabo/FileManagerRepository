@@ -1,6 +1,7 @@
 ﻿using FileManagerClassLibrary.Interfaces;
 using FileManagerClassLibrary.Models;
 using FileManagerClassLibrary.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,27 +25,44 @@ namespace FileManager.Controllers
             return View(await _unitOfWork.FileMetadata.GetAllFileMetadaAsync());
         }
 
+        [HttpGet]
+        [ActionName("Details")]
+        public async Task<IActionResult> Details(string id)
+        {
+            return View(await _unitOfWork.FileMetadata.GetByIdAsync(id));
+        }
+
+        [HttpGet]
         [ActionName("Create")]
         public IActionResult Create()
         {
-            return View();
+            CreateFileViewModel newFile = new CreateFileViewModel();
+            return View(newFile);
         }
 
         [HttpPost]
-        [ActionName("UploadFile")]
+        [ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadFile(CreateFileViewModel newFile)
+        public async Task<IActionResult> Create(CreateFileViewModel newFile)
         {
             try
-            {                
+            {
+                if(newFile.File == null)
+                {
+                    ModelState.AddModelError("File", "The File is Requerid");
+                    return View("Create", newFile);
+                }
+
                 var blobResponse =  await _unitOfWork.BlobStorage.UploadAsync(newFile.File);
-                FileMetadata metadata = _unitOfWork.FileMetadata.MapData(newFile.File, blobResponse.FileName, newFile.Description);
-                
+                if (!blobResponse.Success) return StatusCode(StatusCodes.Status500InternalServerError);
+
+                FileMetadata metadata = _unitOfWork.FileMetadata.MapData(newFile.File, blobResponse.FileName, newFile.Description);                
                 await _unitOfWork.FileMetadata.AddAsync(metadata);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
             {
+                ModelState.AddModelError("", "Unexpected System Error");
                 return View("Create", newFile);
             }
         }
@@ -65,6 +83,26 @@ namespace FileManager.Controllers
             }
         }
 
+        [HttpGet]
+        [ActionName("Delete")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            return View(await _unitOfWork.FileMetadata.GetByIdAsync(id));
+        }
 
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id, string fileNameInBlobStorage)
+        {
+
+            if (await _unitOfWork.BlobStorage.DeleteAsync(fileNameInBlobStorage))
+            {
+                await _unitOfWork.FileMetadata.DeleteAsync(id);
+                return RedirectToAction("Index");
+            }            
+            
+            return View();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FileManagerClassLibrary.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,16 @@ namespace FileManagerClassLibrary.Repositories
     {
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccesor;
+        private readonly ILogger<UnitOfWork> _logger;
 
         private IFileMetadataRepository _fileMetadata;
         private IBlobStorageRepository _blobStorage;
 
-        public UnitOfWork(IConfiguration configuration, IHttpContextAccessor httpContextAccesor)
+        public UnitOfWork(IConfiguration configuration, IHttpContextAccessor httpContextAccesor, ILogger<UnitOfWork> logger)
         {
             _configuration = configuration;
             _httpContextAccesor = httpContextAccesor;
+            _logger = logger;
         }
         public IFileMetadataRepository FileMetadata 
         {
@@ -34,7 +37,7 @@ namespace FileManagerClassLibrary.Repositories
         {
             get
             {
-                return _blobStorage != null ? _blobStorage : _blobStorage = new BlobStorageRepository(_configuration);
+                return _blobStorage != null ? _blobStorage : _blobStorage = new BlobStorageRepository(_configuration,_logger);
             }
         }
       

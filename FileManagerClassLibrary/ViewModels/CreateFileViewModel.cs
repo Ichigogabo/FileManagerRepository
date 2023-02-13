@@ -13,7 +13,7 @@ namespace FileManagerClassLibrary.ViewModels
         [DisplayName("Description")]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The File is Requerid")]
         [DisplayName("File")]
         public IFormFile File { get; set; }
     }
@@ -23,6 +23,7 @@ namespace FileManagerClassLibrary.ViewModels
         public string FileName { get; set; }
     
         public string FileUri { get; set; }
+        public bool Success { get; set; }
     }
 
 

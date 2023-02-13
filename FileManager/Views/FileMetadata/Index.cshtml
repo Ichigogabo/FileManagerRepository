@@ -4,54 +4,67 @@
     ViewData["Title"] = "File Manager - Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="@Url.Content("https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css")" rel="stylesheet" />
+<link href="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/css/FileManagercss/FileManagercss.css")" rel="stylesheet" />
 
-<h1>File Manager</h1>
+<div class="card bg-secondary mb-3">
+    <div class="card-header text-white">File Manager</div>
+    <div class="card-body bg-light">
+        
+        <p>
+            <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Upload New File</a>
+        </p>
+        <table id="Filetable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FileName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FileSize)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UploadedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.owner)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FileName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FileSize)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UploadedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.owner)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("DownloadFile","FileMetadata",new { fileName = item.NameInBlobStorage })" target="_blank" title="Download File" class="btn btn-success"><i class="fa fa-download"></i></a>                            
+                            <a href="@Url.Action("Details","FileMetadata",new { id = item.Id })" title="Show Information File" class="btn btn-info"><i class="fa fa-circle-info"></i></a>
+                            <a href="@Url.Action("Delete","FileMetadata",new { id = item.Id })" title="Delete File" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-<p>
-    @*<button type="button"  class="btn btn-primary">Upload New File</button>*@
-    <a asp-action="Create" class="btn btn-primary">Upload New File</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FileName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileSize)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UploadedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.owner)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FileName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FileSize)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UploadedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.owner)
-                </td>
-                <td>
-                    @Html.ActionLink("Download", "DownloadFile", new { fileName = item.NameInBlobStorage }, new { target = "_blank" }) |
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<script src="@Url.Content("~/js/FileManagerJs/FileManagerjs.js")" defer></script>
+<script src="@Url.Content("https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js")" defer></script>
+<script src="@Url.Content("https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js")" defer></script>
+
+
+

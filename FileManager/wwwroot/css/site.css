@@ -69,3 +69,20 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* Validation Message styles
+-------------------------------------------------- */
+.validation-summary-errors ul {
+    list-style: none;
+    font-family: Times New Roman;
+}
+
+.Error {
+    text-align: center;
+    background-color: #962c2c;
+    border-radius: 2px;
+}
+
+    .Error span {
+        color: white;
+    }
