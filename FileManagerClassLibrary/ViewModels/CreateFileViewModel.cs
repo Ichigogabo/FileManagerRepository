@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileManager.ViewModels.Field
+namespace FileManagerClassLibrary.ViewModels
 {
-    public class FileVM
+    public class CreateFileViewModel
     {
         [DisplayName("Description")]
         public string Description { get; set; }
@@ -17,4 +17,13 @@ namespace FileManager.ViewModels.Field
         [DisplayName("File")]
         public IFormFile File { get; set; }
     }
+
+    public class CreateFileResponseViewModel
+    {      
+        public string FileName { get; set; }
+    
+        public string FileUri { get; set; }
+    }
+
+
 }

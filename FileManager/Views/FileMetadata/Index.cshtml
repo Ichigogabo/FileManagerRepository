@@ -1,11 +1,11 @@
-﻿@model IEnumerable<FileManager.Models.Metadata>
+﻿@model IEnumerable<FileManagerClassLibrary.Models.FileMetadata>
 
 @{
     ViewData["Title"] = "File Manager - Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Fields Manager</h1>
+<h1>File Manager</h1>
 
 <p>
     @*<button type="button"  class="btn btn-primary">Upload New File</button>*@
@@ -24,7 +24,7 @@
                 @Html.DisplayNameFor(model => model.UploadedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UploadedBy)
+                @Html.DisplayNameFor(model => model.owner)
             </th>
             <th>Actions</th>
         </tr>
@@ -43,9 +43,10 @@
                     @Html.DisplayFor(modelItem => item.UploadedDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UploadedBy)
+                    @Html.DisplayFor(modelItem => item.owner)
                 </td>
                 <td>
+                    @Html.ActionLink("Download", "DownloadFile", new { fileName = item.NameInBlobStorage }, new { target = "_blank" }) |
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })

@@ -13,8 +13,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FileManagerClassLibrary.Services.CosmoDbService;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using FileManagerClassLibrary.Interfaces;
+using FileManagerClassLibrary.Repositories;
 
 namespace FileManager
 {
@@ -30,13 +31,6 @@ namespace FileManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            //    .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
-            //services.AddControllersWithViews();
-            //services.AddRazorPages()
-            //     .AddMicrosoftIdentityUI();
-
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAdB2C");
 
             services.AddControllersWithViews(options =>
@@ -46,8 +40,9 @@ namespace FileManager
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddMicrosoftIdentityUI();
-            services.AddRazorPages();
-            services.AddTransient<ICosmosDbService>(x => InitializaCosmoClientInstanceAsync(Configuration).GetAwaiter().GetResult());
+            services.AddRazorPages();            
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,24 +80,6 @@ namespace FileManager
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-        }
-
-        private static async Task<CosmosDbService> InitializaCosmoClientInstanceAsync(IConfiguration configuration)
-        {
-            IConfigurationSection configurationSection = configuration.GetSection("CosmoDb");
-            string databaseName = configurationSection.GetSection("DatabaseName").Value;
-            string containerName = configurationSection.GetSection("ContainerName").Value;
-            string account = configurationSection.GetSection("Account").Value;
-            string Key = configurationSection.GetSection("Key").Value;
-
-            Microsoft.Azure.Cosmos.Fluent.CosmosClientBuilder clientBuilder = new Microsoft.Azure.Cosmos.Fluent.CosmosClientBuilder(account, Key);
-            Microsoft.Azure.Cosmos.CosmosClient client = clientBuilder.WithConnectionModeDirect().Build();
-            CosmosDbService cosmoDbService = new CosmosDbService(client, databaseName, containerName);
-            Microsoft.Azure.Cosmos.DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
-            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
-
-            return cosmoDbService;
-
-        }
+        }  
     }
 }

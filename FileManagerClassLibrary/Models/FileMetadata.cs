@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FileManagerClassLibrary.Models
 {
-    public class Metadata
+    public class FileMetadata
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
@@ -26,10 +26,10 @@ namespace FileManagerClassLibrary.Models
         [JsonProperty(PropertyName = "uploadeddate")]
         [DisplayName("Uploaded Date")]
         public DateTime UploadedDate { get; set; }
-        [JsonProperty(PropertyName = "uploadedby")]
+        [JsonProperty(PropertyName = "owner")]
         [DisplayName("Uploaded By")]
-        public string UploadedBy { get; set; }
-        [JsonProperty(PropertyName = "url")]
+        public string owner { get; set; }
+        [JsonProperty(PropertyName = "nameinblobstorage")]
         [DisplayName("Name In Blob Storage")]
         public string NameInBlobStorage { get; set; }
     }

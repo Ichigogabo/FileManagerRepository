@@ -1,0 +1,64 @@
+﻿@model FileManagerClassLibrary.ViewModels.CreateFileViewModel
+@{
+    ViewData["Title"] = "File Manager - Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("UploadFile", "FileMetadata", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card bg-info mb-3">
+        <div class="card-header">Upload New File</div>
+        <div class="card-body bg-light">
+
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon">Upload File</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="File" name="File" aria-describedby="inputGroupFileAddon">
+                            <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+                @*<hr />*@
+                <div class="col-sm-12 col-md-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Description</span>
+                        </div>
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @style = "resize:none;", maxlength = "750", rows = "4" })
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+        </div>
+        <div class="card-footer bg-transparent"> <button type="submit" class="btn btn-primary">Save</button></div>
+    </div>
+}
+@*<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>*@
+<script>
+    var input = document.getElementById('File');
+    var inputlist = document.getElementsByClassName('custom-file-label');
+    var infoArea = inputlist[0];
+    console.log(infoArea);
+    input.addEventListener('change', showFileName);
+
+    function showFileName(event) {
+
+        // the change event gives us the input it occurred in
+        var input = event.srcElement;
+
+        // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
+        var fileName = input.files[0].name;
+
+        // use fileName however fits your app best, i.e. add it into a div
+        infoArea.textContent = fileName;
+        //infoArea.innerHTML = 'File name: ' + fileName;
+    }
+</script>
