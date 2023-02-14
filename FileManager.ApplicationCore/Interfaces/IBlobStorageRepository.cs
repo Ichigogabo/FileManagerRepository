@@ -1,12 +1,8 @@
-﻿using FileManagerClassLibrary.ViewModels;
+﻿using FileManager.ApplicationCore.ViewModels;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace FileManagerClassLibrary.Interfaces
+namespace FileManager.ApplicationCore.Interfaces
 {
     public interface IBlobStorageRepository
     {

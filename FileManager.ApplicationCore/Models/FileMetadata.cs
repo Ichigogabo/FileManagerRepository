@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace FileManagerClassLibrary.Models
+namespace FileManager.ApplicationCore.Models
 {
     public class FileMetadata
     {

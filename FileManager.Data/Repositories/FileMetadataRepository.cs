@@ -1,27 +1,21 @@
-﻿using FileManagerClassLibrary.Interfaces;
-using FileManagerClassLibrary.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Cosmos;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using FileManager.ApplicationCore.Interfaces;
+using FileManager.ApplicationCore.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Cosmos;
 
-namespace FileManagerClassLibrary.Repositories
+namespace FileManager.Data.Repositories
 {
     public class FileMetadataRepository : IFileMetadataRepository
     {
         private readonly Microsoft.Azure.Cosmos.Container _container;
-        private readonly IHttpContextAccessor _httpContextAccesor;
 
-        public FileMetadataRepository(
-                                CosmosClient dbClient,
-                                string databaseName,
-                                string containerName, IHttpContextAccessor httpContextAccesor)
+        public FileMetadataRepository(CosmosClient dbClient, string databaseName, string containerName)
         {
             this._container = dbClient.GetContainer(databaseName, containerName);
-            _httpContextAccesor = httpContextAccesor;
         }
 
         private string Getsizeinfo(long size)
@@ -35,7 +29,7 @@ namespace FileManagerClassLibrary.Repositories
             return sizeinfo;
         }
 
-        public FileMetadata MapData(IFormFile file, string NameInBlobStorage, string description = null)
+        public FileMetadata MapData(IFormFile file, string userName, string nameInBlobStorage, string description = null)
         {
             FileMetadata metadata = new FileMetadata();
             metadata.Id = Guid.NewGuid().ToString();
@@ -44,8 +38,8 @@ namespace FileManagerClassLibrary.Repositories
             metadata.FileSize = Getsizeinfo(file.Length);
             metadata.ContentType = file.ContentType;
             metadata.UploadedDate = DateTime.Now;
-            metadata.NameInBlobStorage = NameInBlobStorage;
-            metadata.owner = _httpContextAccesor.HttpContext.User.Identity.Name;
+            metadata.NameInBlobStorage = nameInBlobStorage;
+            metadata.owner = userName;
             return metadata;
         }
         public async Task AddAsync(FileMetadata item)
@@ -66,9 +60,9 @@ namespace FileManagerClassLibrary.Repositories
             }
         }
 
-        public async Task<IEnumerable<FileMetadata>> GetAllFileMetadaAsync()
+        public async Task<IEnumerable<FileMetadata>> GetAllFileMetadaAsync(string userName)
         {            
-            var query = _container.GetItemQueryIterator<FileMetadata>(new QueryDefinition($"Select * From C where C.owner = @owner").WithParameter("@owner", _httpContextAccesor.HttpContext.User.Identity.Name));
+            var query = _container.GetItemQueryIterator<FileMetadata>(new QueryDefinition($"Select * From C where C.owner = @owner").WithParameter("@owner", userName));
             List<FileMetadata> results = new List<FileMetadata>();
 
             while (query.HasMoreResults)

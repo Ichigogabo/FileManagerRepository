@@ -1,19 +1,16 @@
-﻿using Azure;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using FileManagerClassLibrary.Interfaces;
-using FileManagerClassLibrary.ViewModels;
+using FileManager.ApplicationCore.Interfaces;
+using FileManager.ApplicationCore.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FileManagerClassLibrary.Repositories
+namespace FileManager.Data.Repositories
 {
     public class BlobStorageRepository : IBlobStorageRepository
     {
@@ -81,7 +78,7 @@ namespace FileManagerClassLibrary.Repositories
             catch (RequestFailedException ex)
                 when (ex.ErrorCode == BlobErrorCode.BlobNotFound)
             {
-                
+                _logger.LogError($"File {blobFilename} was not found.");
             }
 
             // File does not exist, return null and handle that in requesting method

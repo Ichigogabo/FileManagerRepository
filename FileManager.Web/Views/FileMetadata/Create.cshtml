@@ -1,4 +1,4 @@
-﻿@model FileManagerClassLibrary.ViewModels.CreateFileViewModel
+﻿@model FileManager.ApplicationCore.ViewModels.CreateFileViewModel
 @{
     ViewData["Title"] = "File Manager - Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -45,6 +45,9 @@
                             <span class="input-group-text">Description</span>
                         </div>
                         @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @style = "resize:none;", maxlength = "750", rows = "4" })
+                    </div>
+                    <div class="Error">
+                        @Html.ValidationMessageFor(model => model.Description)
                     </div>
                 </div>
             </div>

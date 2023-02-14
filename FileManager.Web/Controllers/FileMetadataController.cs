@@ -1,12 +1,13 @@
-﻿using FileManagerClassLibrary.Interfaces;
-using FileManagerClassLibrary.Models;
-using FileManagerClassLibrary.ViewModels;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FileManager.ApplicationCore.Interfaces;
+using FileManager.ApplicationCore.Models;
+using FileManager.ApplicationCore.ViewModels;
+using System.Security.Claims;
 
 namespace FileManager.Controllers
 {
@@ -22,7 +23,8 @@ namespace FileManager.Controllers
         [ActionName("Index")]
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.FileMetadata.GetAllFileMetadaAsync());
+            var userName = User.Identity.Name;
+            return View(await _unitOfWork.FileMetadata.GetAllFileMetadaAsync(userName));
         }
 
         [HttpGet]
@@ -43,22 +45,36 @@ namespace FileManager.Controllers
         [HttpPost]
         [ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateFileViewModel newFile)
+        public async Task<IActionResult> Create([FromForm] CreateFileViewModel newFile)
         {
             try
             {
-                if(newFile.File == null)
+                #region Validation
+                if (newFile.File == null)
                 {
-                    ModelState.AddModelError("File", "The File is Requerid");
-                    return View("Create", newFile);
+                    ModelState.AddModelError("File", "File is Requerid");
                 }
 
-                var blobResponse =  await _unitOfWork.BlobStorage.UploadAsync(newFile.File);
-                if (!blobResponse.Success) return StatusCode(StatusCodes.Status500InternalServerError);
+                if (string.IsNullOrEmpty(newFile.Description))
+                {
+                    ModelState.AddModelError("Description", "Description is Requerid");
+                }
+                #endregion
 
-                FileMetadata metadata = _unitOfWork.FileMetadata.MapData(newFile.File, blobResponse.FileName, newFile.Description);                
-                await _unitOfWork.FileMetadata.AddAsync(metadata);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    var blobResponse = await _unitOfWork.BlobStorage.UploadAsync(newFile.File);
+                    if (!blobResponse.Success) return StatusCode(StatusCodes.Status500InternalServerError);
+
+                    var userName = User.Identity.Name;
+                    FileMetadata metadata = _unitOfWork.FileMetadata.MapData(newFile.File, userName, blobResponse.FileName, newFile.Description);
+                    await _unitOfWork.FileMetadata.AddAsync(metadata);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View("Create", newFile);
+                }
             }
             catch(Exception e)
             {

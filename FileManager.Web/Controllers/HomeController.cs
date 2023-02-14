@@ -20,7 +20,7 @@ namespace FileManager.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "FileMetadata");
         }
 
         public IActionResult Privacy()

@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace FileManagerClassLibrary.ViewModels
+namespace FileManager.ApplicationCore.ViewModels
 {
     public class CreateFileViewModel
     {
+        [Required(ErrorMessage = "Description is Requerid")]
         [DisplayName("Description")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "The File is Requerid")]
+        [Required(ErrorMessage = "File is Requerid")]
         [DisplayName("File")]
         public IFormFile File { get; set; }
     }

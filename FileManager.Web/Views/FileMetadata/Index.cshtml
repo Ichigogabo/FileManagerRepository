@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FileManagerClassLibrary.Models.FileMetadata>
+﻿@model IEnumerable<FileManager.ApplicationCore.Models.FileMetadata>
 
 @{
     ViewData["Title"] = "File Manager - Index";
@@ -18,7 +18,7 @@
         <table id="Filetable" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width:5%">
                         @Html.DisplayNameFor(model => model.FileName)
                     </th>
                     <th>
@@ -30,31 +30,37 @@
                     <th>
                         @Html.DisplayNameFor(model => model.owner)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FileName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FileSize)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UploadedDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.owner)
-                        </td>
-                        <td>
-                            <a href="@Url.Action("DownloadFile","FileMetadata",new { fileName = item.NameInBlobStorage })" target="_blank" title="Download File" class="btn btn-success"><i class="fa fa-download"></i></a>                            
-                            <a href="@Url.Action("Details","FileMetadata",new { id = item.Id })" title="Show Information File" class="btn btn-info"><i class="fa fa-circle-info"></i></a>
-                            <a href="@Url.Action("Delete","FileMetadata",new { id = item.Id })" title="Delete File" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileSize)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UploadedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.owner)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("DownloadFile","FileMetadata",new { fileName = item.NameInBlobStorage })" target="_blank" title="Download File" class="btn btn-success"><i class="fa fa-download"></i></a>
+                        <a href="@Url.Action("Details","FileMetadata",new { id = item.Id })" title="Show Information File" class="btn btn-info"><i class="fa fa-circle-info"></i></a>
+                        <a href="@Url.Action("Delete","FileMetadata",new { id = item.Id })" title="Delete File" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
